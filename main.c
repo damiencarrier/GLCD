@@ -56,6 +56,8 @@
 // définis la page a afficher de 0à7
 #define PAGE 0xB8
 
+#define NOP __asm__("nop");
+
 //initialiser le LCD
 //mettre CTRL_DIR en sortie
 //mettre CTRL a RESET
@@ -102,8 +104,8 @@ char increment_colonne=32;
 //ecriture du N° de colonne dans la colonne, a gauche, puis l'inverse a droite
 unsigned char no_colonne, no_page, ligne,decalage,ligne_carac;
 
-unsigned int tension_pinF0,tension_pinf1,tension_pinf2,tension_pinf3,tension_pinf4;
-unsigned int tension_pinf5,tension_pinf6,tension_pinf7;
+unsigned long int tension_pinF0,tension_pinf1,tension_pinf2,tension_pinf3,tension_pinf4;
+unsigned long int tension_pinf5,tension_pinf6,tension_pinf7;
 unsigned long int puissance_E,puissance_A,puissance_entree_E,puissance_entree_A,rendement_E,rendement_A;
 
 static char tension_string1[] = {'0','0','0','0','0'};
@@ -113,7 +115,7 @@ static char tension_string4[] = {'0','0','0','0','0'};
 static char tension_string5[] = {'0','0','0','0','0'};
 static char tension_string6[] = {'0','0','0','0','0'};
 static char tension_string7[] = {'0','0','0','0','0'};
-static char puissance_E_string[] = {'0','0','0','0','0','0'};
+static char puissance_E_string[] = {'0','0','0','0','0'};
 static char puissance_A_string[] = {'0','0','0','0','0'};
 
 static char puissance_entree_E_string[] = {'1','2','3','4','5','6'};
@@ -132,8 +134,10 @@ void ecran_noir_gauche(){
 				do {
 					CTRL = (READ_STATUS 	| LEFT);
 					CTRL = (READ_STATUS_E	| LEFT);
+					NOP;
 					CTRL = (READ_STATUS 	| LEFT);
 					CTRL = (READ_STATUS_E	| LEFT);
+					NOP;
 					status_left = DATAR;
 					CTRL = IDLE;
 				} while (status_left);
@@ -155,8 +159,10 @@ void ecran_noir_gauche(){
 			do {
 				CTRL = (READ_STATUS 	| LEFT);
 				CTRL = (READ_STATUS_E	| LEFT);
+				NOP;
 				CTRL = (READ_STATUS 	| LEFT);
 				CTRL = (READ_STATUS_E	| LEFT);
+				NOP;
 				status_left = DATAR;
 				CTRL = IDLE;
 			} while (status_left);
@@ -180,8 +186,10 @@ void ecran_noir_droit(){
 		do {
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			status_right = DATAR;
 			CTRL = IDLE;
 		} while (status_right);
@@ -202,8 +210,10 @@ void ecran_noir_droit(){
 			do {
 				CTRL = (READ_STATUS 	| RIGHT);
 				CTRL = (READ_STATUS_E	| RIGHT);
+				NOP;
 				CTRL = (READ_STATUS 	| RIGHT);
 				CTRL = (READ_STATUS_E	| RIGHT);
+				NOP;
 				status_right = DATAR;
 				CTRL = IDLE;
 			} while (status_right);
@@ -228,8 +238,10 @@ void ecran_blanc_gauche(){
 		do {
 			CTRL = (READ_STATUS 	| LEFT);
 			CTRL = (READ_STATUS_E	| LEFT);
+			NOP;
 			CTRL = (READ_STATUS 	| LEFT);
 			CTRL = (READ_STATUS_E	| LEFT);
+			NOP;
 			status_left = DATAR;
 			CTRL = IDLE;
 		} while (status_left);
@@ -250,8 +262,10 @@ void ecran_blanc_gauche(){
 			do {
 				CTRL = (READ_STATUS 	| LEFT);
 				CTRL = (READ_STATUS_E	| LEFT);
+				NOP;
 				CTRL = (READ_STATUS 	| LEFT);
 				CTRL = (READ_STATUS_E	| LEFT);
+				NOP;
 				status_left = DATAR;
 				CTRL = IDLE;
 			} while (status_left);
@@ -275,8 +289,10 @@ void ecran_blanc_droit(){
 		do {
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			status_right = DATAR;
 			CTRL = IDLE;
 		} while (status_right);
@@ -297,8 +313,10 @@ void ecran_blanc_droit(){
 			do {
 				CTRL = (READ_STATUS 	| RIGHT);
 				CTRL = (READ_STATUS_E	| RIGHT);
+				NOP;
 				CTRL = (READ_STATUS 	| RIGHT);
 				CTRL = (READ_STATUS_E	| RIGHT);
+				NOP;
 				status_right = DATAR;
 				CTRL = IDLE;
 			} while (status_right);
@@ -334,8 +352,10 @@ void initialiser_ecran(){
 		do {
 			CTRL = (READ_STATUS 	| LEFT);
 			CTRL = (READ_STATUS_E	| LEFT);
+			NOP;
 			CTRL = (READ_STATUS 	| LEFT);
 			CTRL = (READ_STATUS_E	| LEFT);
+			NOP;
 			status_left = DATAR;
 			CTRL = IDLE;
 		} while (status_left & 0xDF);
@@ -344,8 +364,10 @@ void initialiser_ecran(){
 		do {
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			status_right = DATAR;
 			CTRL = IDLE;
 		} while (status_right & 0xDF);
@@ -376,8 +398,10 @@ void initialiser_ecran(){
 		do {
 			CTRL = (READ_STATUS 	| LEFT);
 			CTRL = (READ_STATUS_E	| LEFT);
+			NOP;
 			CTRL = (READ_STATUS 	| LEFT);
 			CTRL = (READ_STATUS_E	| LEFT);
+			NOP;
 			status_left = DATAR;
 			CTRL = IDLE;
 		} while (status_left);
@@ -386,8 +410,10 @@ void initialiser_ecran(){
 		do {
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			CTRL = (READ_STATUS 	| RIGHT);
 			CTRL = (READ_STATUS_E	| RIGHT);
+			NOP;
 			status_right = DATAR;
 			CTRL = IDLE;
 		} while (status_right);
@@ -430,8 +456,10 @@ void ecran_disponible_gauche(){
 	do {
 		CTRL = (READ_STATUS 	| LEFT);
 		CTRL = (READ_STATUS_E	| LEFT);
+		NOP;
 		CTRL = (READ_STATUS 	| LEFT);
 		CTRL = (READ_STATUS_E	| LEFT);
+		NOP;
 		status_left = DATAR;
 		CTRL = IDLE;
 	} while (status_left);
@@ -443,8 +471,10 @@ void ecran_disponible_droit(){
 	do {
 		CTRL = (READ_STATUS 	| RIGHT);
 		CTRL = (READ_STATUS_E	| RIGHT);
+		NOP;
 		CTRL = (READ_STATUS 	| RIGHT);
 		CTRL = (READ_STATUS_E	| RIGHT);
+		NOP;
 		status_right = DATAR;
 		CTRL = IDLE;
 	} while (status_right);
@@ -586,9 +616,29 @@ void mesure_tension(){
 	puissance_entree_A = (tension_pinf1/10) * (tension_pinf7/100);
 	puissance_E = (tension_pinf3/10) * (tension_pinf4/100);
 	puissance_A = (tension_pinf5/10) * (tension_pinf6/100);
-	rendement_E = puissance_E / puissance_entree_E;
-	rendement_A = puissance_A / puissance_entree_A;
+	if (puissance_E<puissance_entree_E){
+		rendement_E = (puissance_E*1000)/ (puissance_entree_E/100);
+	}else rendement_E = 99999;
+	if (puissance_A<puissance_entree_A){
+		rendement_A = (puissance_A*1000)/ (puissance_entree_A/100);
+	}else rendement_A = 99999;
 
+	if (puissance_entree_E>100000){
+		puissance_entree_E = 99999;
+		rendement_E =0;
+	}
+	if (puissance_entree_A>100000){
+		puissance_entree_A = 99999;
+		rendement_A =0;
+	}
+	if (puissance_E>100000){
+		puissance_E = 99999;
+		rendement_E =0;
+	}
+	if (puissance_A>100000){
+		puissance_A = 99999;
+		rendement_A =0;
+	}
 	dtostrf(puissance_entree_E,5,0,puissance_entree_F_string);
 	dtostrf(puissance_entree_A,5,0,puissance_entree_A_string);
 	dtostrf(puissance_E,6,0,puissance_E_string);
@@ -602,25 +652,20 @@ int main()
 {
 	initialiser_ecran();
 
-	ecran_noir_gauche();
-	_delay_ms(100);
-	ecran_noir_droit();
-	_delay_ms(100);
+
 	ecran_blanc_gauche();
 	_delay_ms(100);
 	ecran_blanc_droit();
+	_delay_ms(100);
+	ecran_noir_gauche();
+	_delay_ms(100);
+	ecran_noir_droit();
 	_delay_ms(100);
 
 	do {
 
 		mesure_tension();
 
-
-
-
-		//ecran_blanc_gauche();
-		//ecran_blanc_droit();
-		//_delay_ms(1);
 		ecran_disponible_gauche();
 
 		// on remet le bus DATA en sortie
@@ -970,12 +1015,12 @@ int main()
 			afficher_carac_droit(numero_lettre(' '));
 			afficher_carac_droit(numero_lettre('P'));
 			afficher_carac_droit(numero_lettre(':'));
+			afficher_carac_droit(numero_lettre(puissance_E_string[0]));
 			afficher_carac_droit(numero_lettre(puissance_E_string[1]));
-			afficher_carac_droit(numero_lettre(puissance_E_string[2]));
 			afficher_carac_droit(numero_lettre(','));
+			afficher_carac_droit(numero_lettre(puissance_E_string[2]));
 			afficher_carac_droit(numero_lettre(puissance_E_string[3]));
 			afficher_carac_droit(numero_lettre(puissance_E_string[4]));
-			afficher_carac_droit(numero_lettre(puissance_E_string[5]));
 			afficher_carac_droit(numero_lettre('W'));
 
 			for (no_colonne = 0; no_colonne < 4; no_colonne ++) {
@@ -1142,7 +1187,7 @@ int main()
 
 			//tension abaisseur
 			afficher_carac_droit(numero_lettre(' '));
-			afficher_carac_droit(numero_lettre('v'));
+			afficher_carac_droit(numero_lettre('V'));
 			afficher_carac_droit(numero_lettre(':'));
 			afficher_carac_droit(numero_lettre(tension_string5[0]));
 			afficher_carac_droit(numero_lettre(tension_string5[1]));
@@ -1319,7 +1364,7 @@ int main()
 
 			//puissance abaisseur
 			afficher_carac_droit(numero_lettre(' '));
-			afficher_carac_droit(numero_lettre('p'));
+			afficher_carac_droit(numero_lettre('P'));
 			afficher_carac_droit(numero_lettre(':'));
 			afficher_carac_droit(numero_lettre(puissance_A_string[0]));
 			afficher_carac_droit(numero_lettre(puissance_A_string[1]));
