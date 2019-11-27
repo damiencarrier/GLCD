@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include "lcd_font_5x7.h"
 #include "commun.h"
+#include "ADC.h"
 
 #ifndef GLCD_H_
 #define GLCD_H_
@@ -101,20 +102,6 @@ unsigned char status_GAUCHE , status_DROIT;
 unsigned char no_colonne, no_page;
 
 unsigned char ligne,decalage,ligne_carac;
-
-//variable permettant de faire des mesures de tension
-unsigned long tension_pinF0,tmp_tension_pinf;
-unsigned long puissance_E,puissance_A,puissance_entree_E,puissance_entree_A,rendement_E,rendement_A;
-
-static unsigned long tension_pinf[8][12];
-//static unsigned long tension_pinf2[12];
-//static unsigned long tension_pinf3[12];
-//static unsigned long tension_pinf4[12];
-//static unsigned long tension_pinf5[12];
-//static unsigned long tension_pinf6[12];
-//static unsigned long tension_pinf7[12];
-//static unsigned long tension_pinf8[12];//tension de référence 4096mv
-static unsigned long tension_pinf_moyenne[8];
 
 //attend que l'écran sélectionné soit disponible
 void ecran_disponible(GAUCHE_DROIT cote){
@@ -275,153 +262,6 @@ void afficher_carac(GAUCHE_DROIT cote ,unsigned int ligne_font){
 		CTRL = (WRITE_RAM 	| cote);
 		CTRL = IDLE;
 
-}
-
-//mesure toutes les tensions dans le tableau tension_pinf
-void mesure_tension(unsigned int numero_mesure){
-	//mesure la tension en millivolt
-
-	//mesure la ref de tension 4096mv
-	ADMUX = 0b010000000;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[0][numero_mesure] = 405500/950;
-
-	//premiere mesure sur 7
-	ADMUX = 0b010000001;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[1][numero_mesure] = (tension_pinF0*tension_pinf[0][numero_mesure]*3)/100;
-
-	//fonction permettant de faire une conversion binaire BCD (que je n'utilise pas)
-	//dtostrf(tension_pinf1,5,0,tension_string1);
-
-	ADMUX = 0b010000010;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0=0;
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[2][numero_mesure] = tension_pinF0*tension_pinf[0][numero_mesure]/100*2;
-
-	ADMUX = 0b010000011;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[3][numero_mesure] = tension_pinF0*tension_pinf[0][numero_mesure]/100*5;
-
-	ADMUX = 0b010000100;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[4][numero_mesure] = tension_pinF0*tension_pinf[0][numero_mesure]/100;
-
-	ADMUX = 0b010000101;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[5][numero_mesure] = tension_pinF0*tension_pinf[0][numero_mesure]/100;
-
-	ADMUX = 0b010000110;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[6][numero_mesure] = tension_pinF0*tension_pinf[0][numero_mesure]/100;
-
-	ADMUX = 0b010000111;		// Initialisation de l'ADC avec selection AVCC
-	// On lance la conversion
-	ADCSRA = (1<<ADEN) | (1<<ADSC)| 0x06;
-	// On attend que le bit ADSC repasse à 0 pour signifier la fin de conversion
-	while(ADCSRA & (1<<ADSC));
-	//ADCSRA =0;	// on éteint l'ADC
-	tension_pinF0 = ADC & 0x000003FF;
-	tension_pinf[7][numero_mesure] = tension_pinF0*tension_pinf[0][numero_mesure]/100;
-}
-
-//fait la moyenne sur 12 valeurs
-//écarte les 2 extremes
-void mesure_tension_moyennee(){
-	//mesure 12 valeurs des 8 tensions
-	for(int i=0;i<12;i++){
-		mesure_tension(i);
-	}
-
-	//tri les 12 valeurs
-	for(int i=0;i<8;i++){
-			//trie la plus grande et la plus grande et petite valeur
-			for(int j=0;j<11;j++){
-				//met en premier la plus petite valeur
-				if(tension_pinf[i][0]>tension_pinf[i][j+1]){
-					tmp_tension_pinf=tension_pinf[i][0];
-					tension_pinf[i][0]=tension_pinf[i][j+1];
-					tension_pinf[i][j+1]=tmp_tension_pinf;
-				}
-				//met en dernier la plus grande valeur
-				if(tension_pinf[i][j+1]<tension_pinf[i][j]){
-					tmp_tension_pinf=tension_pinf[i][j+1];
-					tension_pinf[i][j+1]=tension_pinf[i][j];
-					tension_pinf[i][j]=tmp_tension_pinf;
-				}
-			}
-			//fait la moyenne des 10 valeurs sans les 2 extrèmes
-			tension_pinf_moyenne[i]= ( tension_pinf[i][1] + tension_pinf[i][2]
-									 + tension_pinf[i][3] + tension_pinf[i][4]
-									 + tension_pinf[i][5] + tension_pinf[i][6]
-									 + tension_pinf[i][7] + tension_pinf[i][8]
-									 + tension_pinf[i][9] + tension_pinf[i][10] )/10;
-
-	}
-
-	//calcule toutes les valeurs et construit les nombres en décimal
-	puissance_entree_E = (tension_pinf_moyenne[1]/10) * (tension_pinf_moyenne[2]/100);
-	puissance_entree_A = (tension_pinf_moyenne[1]/10) * (tension_pinf_moyenne[7]/100);
-	puissance_E = (tension_pinf_moyenne[3]/10) * (tension_pinf_moyenne[4]/100);
-	puissance_A = (tension_pinf_moyenne[5]/10) * (tension_pinf_moyenne[6]/100);
-	if (puissance_E<puissance_entree_E){
-		rendement_E = (puissance_E*1000)/ (puissance_entree_E/100);
-	}else rendement_E = 99999;
-	if (puissance_A<puissance_entree_A){
-		rendement_A = (puissance_A*1000)/ (puissance_entree_A/100);
-	}else rendement_A = 99999;
-
-	if (puissance_entree_E>100000){
-		puissance_entree_E = 99999;
-		rendement_E =0;
-	}
-	if (puissance_entree_A>100000){
-		puissance_entree_A = 99999;
-		rendement_A =0;
-	}
-	if (puissance_E>100000){
-		puissance_E = 99999;
-		rendement_E =0;
-	}
-	if (puissance_A>100000){
-		puissance_A = 99999;
-		rendement_A =0;
-	}
 }
 
 //donne la valeur de la lettre dans la font
@@ -1119,56 +959,4 @@ void glcd_write_nombre(GAUCHE_DROIT cote, u8 ligne, u32 nombre){
 		afficher_carac(cote, (dixieme-32)*5 );
 		afficher_carac(cote, (centieme-32)*5 );
 	}
-}
-
-//fonction principale affichant toutes les tensions
-void GLCD_Code(){
-	initialiser_ecran();
-
-	ecran_blanc(GAUCHE);
-	_delay_ms(100);
-	ecran_blanc(DROIT);
-	_delay_ms(100);
-	ecran_noir(GAUCHE);
-	_delay_ms(100);
-	ecran_noir(DROIT);
-	_delay_ms(100);
-	masque_ecran();
-
-	do {
-		//mesure toutes les tensions 12 fois
-		for(int i=0;i<12;i++){
-			mesure_tension(i);
-		}
-		mesure_tension_moyennee();
-		//affiche toutes les valeurs
-		//tension batterie
-		glcd_write_nombre(GAUCHE,1,tension_pinf_moyenne[1]);
-		//courant batterie élévateur
-		glcd_write_nombre(GAUCHE,2,tension_pinf_moyenne[2]);
-		//tension élévateur
-		glcd_write_nombre(DROIT ,1,tension_pinf_moyenne[3]);
-		//courant élévateur
-		glcd_write_nombre(DROIT ,2,tension_pinf_moyenne[4]);
-		//puissance entrée élévateur
-		glcd_write_nombre(GAUCHE,3,puissance_entree_E);
-		//puissance élévateur
-		glcd_write_nombre(DROIT ,3,puissance_E);
-		//rendement élévateur
-		glcd_write_nombre(GAUCHE,4,rendement_E);
-		//rendement abaisseur
-		glcd_write_nombre(GAUCHE,5,rendement_A);
-		//tension abaisseur
-		glcd_write_nombre(DROIT ,5,tension_pinf_moyenne[5]);
-		//courant entrée abaisseur
-		glcd_write_nombre(GAUCHE,6,tension_pinf_moyenne[7]);
-		//courant abaisseur
-		glcd_write_nombre(DROIT ,6,tension_pinf_moyenne[6]);
-		//puissance entrée abaisseur
-		glcd_write_nombre(GAUCHE,7,puissance_entree_A);
-		//puissance abaisseur
-		glcd_write_nombre(DROIT ,7,puissance_A);
-
-		_delay_ms(250);
-		}while(1);
 }

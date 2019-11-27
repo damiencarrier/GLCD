@@ -24,11 +24,6 @@ void initialiser_ecran();
 void ecran_disponible(GAUCHE_DROIT cote);
 //affiche sur l'écran le caractère donnée
 void afficher_carac(GAUCHE_DROIT cote ,unsigned int ligne_font);
-//mesure toutes les tensions
-void mesure_tension();
-//fait la moyenne sur 12 valeurs
-//écarte les 2 extremes
-void mesure_tension_moyennee();
 //construit les chiffres pour l'afficher à l'écran
 void glcd_write_nombre(GAUCHE_DROIT cote, u8 ligne, u32 nombre);
 //donne la valeur de la lettre dans la font
@@ -39,5 +34,3 @@ void masque_ecran();
 void glcd_y (GAUCHE_DROIT cote, u8 no_ligne);
 //positionne le "curseur" sur le bon caractere
 void glcd_x (GAUCHE_DROIT cote, u8 no_caractere);
-//fonction principale affichant toutes les tensions
-void GLCD_Code();
