@@ -261,7 +261,6 @@ void afficher_carac(GAUCHE_DROIT cote ,unsigned int ligne_font){
 		CTRL = (WRITE_RAM_E	| cote);
 		CTRL = (WRITE_RAM 	| cote);
 		CTRL = IDLE;
-
 }
 
 //donne la valeur de la lettre dans la font

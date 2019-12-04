@@ -5,13 +5,6 @@
  *      Author: damien carrier
  */
 // Déclaration des fichiers d'en-têtes
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "lcd_font_5x7.h"
 #include "commun.h"
 
 //met en noir l'écran sélectionné
